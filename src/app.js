@@ -42,14 +42,14 @@ module.exports = (db) => {
     if (typeof driverName !== 'string' || driverName.length < 1) {
       return res.send({
         error_code: 'VALIDATION_ERROR',
-        message: 'Driver name must be a non empty string',
+        message: 'Driver name must be a non empty string'
       });
     }
 
     if (typeof driverVehicle !== 'string' || driverVehicle.length < 1) {
       return res.send({
         error_code: 'VALIDATION_ERROR',
-        message: 'Driver vehicle must be a non empty string',
+        message: 'Driver vehicle must be a non empty string'
       });
     }
 
@@ -77,7 +77,11 @@ module.exports = (db) => {
   });
 
   app.get('/rides', (req, res) => {
-    db.all('SELECT * FROM Rides', function (err, rows) {
+    let { page } = req.query;
+    page = page || 1;
+    const lowerLimit = (page - 1) * 5;
+
+    db.all(`SELECT * FROM Rides WHERE rideID > ${lowerLimit} ORDER BY rideID LIMIT 5`, function (err, rows) {
       if (err) {
         return res.send({
           error_code: 'SERVER_ERROR',
