@@ -1,0 +1,23 @@
+config:
+  target: 'http://localhost:8010'
+  phases:
+    - duration: 30
+      arrivalRate: 110
+scenarios:
+  - flow:
+    - post:
+        url: "/rides"
+        json:
+          start_lat: 1.233
+          start_long: 2.11
+          end_lat: 3.11
+          end_long: 4.11
+          rider_name: 'KamenRider'
+          driver_name: 'UltraDriver'
+          driver_vehicle: 'merc'
+  - flow:
+    - get:
+        url: "/rides"
+  - flow:
+    - get:
+        url: "/rides/1"
