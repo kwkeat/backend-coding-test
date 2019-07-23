@@ -34,7 +34,7 @@ describe('API tests', () => {
     it('should return RIDES_NOT_FOUND_ERROR', (done) => {
       request(app)
         .get('/rides')
-        .expect(200)
+        .expect(404)
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if (err) {
@@ -60,7 +60,7 @@ describe('API tests', () => {
           driver_name: 'UltraDriver',
           driver_vehicle: 'Sanrio'
         })
-        .expect(200)
+        .expect(400)
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if (err) {
@@ -86,7 +86,7 @@ describe('API tests', () => {
           driver_name: 'UltraDriver',
           driver_vehicle: 'Sanrio'
         })
-        .expect(200)
+        .expect(400)
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if (err) {
@@ -150,6 +150,23 @@ describe('API tests', () => {
     });
   });
 
+  describe('GET /rides with string', () => {
+    it('should return validation error', (done) => {
+      request(app)
+        .get('/rides/tmd')
+        .expect(400)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          }
+          const jsonResponse = JSON.parse(res.text);
+          assert.strict.equal(jsonResponse.error_code, 'VALIDATION_ERROR');
+          done();
+        });
+    });
+  });
+
   describe('GET /rides on page 1', () => {
     it('should return array of rides object', (done) => {
       request(app)
@@ -170,10 +187,10 @@ describe('API tests', () => {
   });
 
   describe('GET /rides on page 2', () => {
-    it('should returun RIDES NOT FOUND error', (done) => {
+    it('should return RIDES NOT FOUND error', (done) => {
       request(app)
         .get('/rides?page=2')
-        .expect(200)
+        .expect(404)
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if (err) {
@@ -202,11 +219,28 @@ describe('API tests', () => {
     });
   });
 
-  describe('GET /rides/:id that does not exist', () => {
+  describe('GET /rides/:id with string', () => {
+    it('should return validation error', (done) => {
+      request(app)
+        .get('/rides/tmd')
+        .expect(400)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          }
+          const jsonResponse = JSON.parse(res.text);
+          assert.strict.equal(jsonResponse.error_code, 'VALIDATION_ERROR');
+          done();
+        });
+    });
+  });
+
+  describe('GET /rides/:id with id that does not exist', () => {
     it('should return RIDES_NOT_FOUND_ERROR', (done) => {
       request(app)
         .get('/rides/2')
-        .expect(200)
+        .expect(404)
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if (err) {

@@ -23,10 +23,10 @@ module.exports = (db) => {
     page = page || 1;
     const lowerLimit = (page - 1) * 5;
 
-    const query = `SELECT * FROM Rides WHERE rideID > ${lowerLimit} ORDER BY rideID LIMIT 5`;
+    const query = 'SELECT * FROM Rides WHERE rideID > ? ORDER BY rideID LIMIT 5';
 
     return new Promise((resolve, reject) => {
-      db.all(query, (error, rows) => {
+      db.all(query, lowerLimit, (error, rows) => {
         if (error) {
           reject(error);
         }
@@ -38,7 +38,7 @@ module.exports = (db) => {
 
   const getById = (id) => {
     return new Promise((resolve, reject) => {
-      db.all(`SELECT * FROM Rides WHERE rideID='${id}'`, function (err, rows) {
+      db.all('SELECT * FROM Rides WHERE rideID = ?', id, function (err, rows) {
         if (err) {
           reject(err);
         };
